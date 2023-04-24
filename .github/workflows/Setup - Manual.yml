@@ -1,0 +1,27 @@
+# This is a basic workflow that is manually triggered
+
+name: Setup
+
+on:
+ workflow_dispatch
+   
+jobs:
+  Setup:
+    runs-on: ubuntu-latest  
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set repo_name
+      run: |
+        echo repo_name=${GITHUB_REPOSITORY#*\/} >> $GITHUB_ENV
+         
+    - name: Rename files
+      run: |
+        git mv "Deploy-Application.exe" "${{ env.repo_name }}.exe"
+        git mv "Deploy-Application.exe.config" "${{ env.repo_name }}.exe.config"
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "Renamed" 
+        git push
